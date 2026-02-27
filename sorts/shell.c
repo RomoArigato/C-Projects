@@ -1,8 +1,6 @@
 #include "gaps.h"
 #include "stats.h"
 
-#include <stdio.h>
-
 void shell_sort(Stats *stats, int *A, int n) {
   stats->moves = 0; // throwaway line so compiler stops bitching
   for (int i = 0; i < GAPS; i++) {
