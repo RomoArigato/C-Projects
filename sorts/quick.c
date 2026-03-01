@@ -1,34 +1,29 @@
 #include "gaps.h"
 #include "stats.h"
 
-int partition(int *A, int lo, int hi) {
+int partition(Stats *stats, int *A, int lo, int hi) {
   int i = lo - 1;
 
   for (int j = lo; j < hi; j++) {
-    if (A[j] < A[hi]) {
+    if (cmp(stats, A[j], A[hi]) == -1) {
       i++;
-      int temp = A[i];
-      A[i] = A[j];
-      A[j] = temp;
+      swap(stats, &A[i], &A[j]);
     }
   }
 
   i++;
-  int temp = A[i];
-  A[i] = A[hi];
-  A[hi] = temp;
+  swap(stats, &A[i], &A[hi]);
   return i;
 }
 
-void quick_sorter(int *A, int lo, int hi) {
+void quick_sorter(Stats *stats, int *A, int lo, int hi) {
   if (lo < hi) {
-    int p = partition(A, lo, hi);
-    quick_sorter(A, lo, p - 1);
-    quick_sorter(A, p + 1, hi);
+    int p = partition(stats, A, lo, hi);
+    quick_sorter(stats, A, lo, p - 1);
+    quick_sorter(stats, A, p + 1, hi);
   }
 }
 
 void quick_sort(Stats *stats, int *A, int n) {
-  stats->moves = 0; // throwaway line so compiler stops crying
-  quick_sorter(A, 0, n - 1);
+  quick_sorter(stats, A, 0, n - 1);
 }

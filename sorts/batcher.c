@@ -1,18 +1,13 @@
 #include "batcher.h"
 #include "stats.h"
 
-#include <stdio.h>
-
-void comparator(int *A, int x, int y) {
-  if (A[x] > A[y]) {
-    int temp = A[x];
-    A[x] = A[y];
-    A[y] = temp;
+void comparator(Stats *stats, int *A, int x, int y) {
+  if (cmp(stats, A[x], A[y]) == 1) {
+    swap(stats, &A[x], &A[y]);
   }
 }
 
 void batcher_sort(Stats *stats, int *A, int n) {
-  stats->moves = 0; // throwaway line so compiler stops crying
   if (n == 0) {
     return;
   }
@@ -35,7 +30,7 @@ void batcher_sort(Stats *stats, int *A, int n) {
     while (d > 0) {
       for (int i = 0; i < n - d; i++) {
         if ((i & p) == r) {
-          comparator(A, i, i + d);
+          comparator(stats, A, i, i + d);
         }
       }
       d = q - p;
