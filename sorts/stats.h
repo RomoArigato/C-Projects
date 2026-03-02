@@ -1,10 +1,10 @@
 #pragma once
 
 /*
-* DO NOT MODIFY THIS FILE.
-*
-* For documentation, see stats.c .
-*/
+ * DO NOT MODIFY THIS FILE.
+ *
+ * For documentation, see stats.c .
+ */
 
 #include <inttypes.h>
 

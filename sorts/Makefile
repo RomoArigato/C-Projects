@@ -32,7 +32,6 @@ OBJS=\
     sorting.o \
     stats.o \
 
-
 .PHONY: all debug release clean
 
 all: debug

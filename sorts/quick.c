@@ -5,7 +5,7 @@ int partition(Stats *stats, int *A, int lo, int hi) {
   int i = lo - 1;
 
   for (int j = lo; j < hi; j++) {
-    if (cmp(stats, A[j], A[hi]) == -1) {
+    if (cmp(stats, A[j], A[hi]) < 0) {
       i++;
       swap(stats, &A[i], &A[j]);
     }

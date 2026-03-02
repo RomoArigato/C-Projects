@@ -27,9 +27,20 @@
   "   -p elements     Specify number of elements to print (default: 100).\n"   \
   "   -r seed         Specify random seed (default: 13371453).\n"
 
+typedef void (*sort_fn)(Stats *stats, int *A, int n);
+
+sort_fn sorting_functions[5] = {insertion_sort, heap_sort, shell_sort,
+                                quick_sort, batcher_sort};
+
+enum { INSERTION = 3, HEAP, SHELL, QUICK, BATCHER };
+
+char *function_names[5] = {"Insertion Sort", "Heap Sort", "Shell Sort",
+                           "Quick Sort", "Batcher Sort"};
+
 int main(int argc, char *argv[]) {
   Set sorts = set_empty();
   Stats *stats = malloc(sizeof(Stats));
+  stats->compares = stats->moves = 0;
   unsigned int seed = 13371453;
   int size = 100;
   int print_size = 100;
@@ -103,92 +114,30 @@ int main(int argc, char *argv[]) {
     arr[i] = random() & 0x3FFFFFFF;
   }
 
-  if (set_member(sorts, 3)) {
-    memcpy(arr_copy, arr, size * sizeof(int));
-    insertion_sort(stats, arr_copy, size);
-    print_stats(stats, "Insertion Sort", size);
+  for (int i = INSERTION; i <= BATCHER; i++) {
+    if (set_member(sorts, i)) {
+      // i starts at 3
+      sort_fn sort = sorting_functions[i - 3];
+      char *name = function_names[i - 3];
+      memcpy(arr_copy, arr, size * sizeof(int));
+      sort(stats, arr_copy, size);
+      print_stats(stats, name, size);
 
-    if (print_size) {
-      for (int i = 0; i < print_size; i++) {
-        if (i > 0 && i % 5 == 0) {
-          printf("\n");
+      if (print_size) {
+        for (int i = 0; i < print_size; i++) {
+          if (i > 0 && i % 5 == 0) {
+            printf("\n");
+          }
+          printf("%13d", arr_copy[i]);
         }
-        printf("%13d", arr_copy[i]);
+        printf("\n");
       }
-      printf("\n");
-    }
-    reset(stats);
-  }
-
-  if (set_member(sorts, 4)) {
-    memcpy(arr_copy, arr, size * sizeof(int));
-    heap_sort(stats, arr_copy, size);
-    print_stats(stats, "Heap Sort", size);
-
-    if (print_size) {
-      for (int i = 0; i < print_size; i++) {
-        if (i > 0 && i % 5 == 0) {
-          printf("\n");
-        }
-        printf("%13d", arr_copy[i]);
-      }
-      printf("\n");
-    }
-    reset(stats);
-  }
-
-  if (set_member(sorts, 5)) {
-    memcpy(arr_copy, arr, size * sizeof(int));
-    shell_sort(stats, arr_copy, size);
-    print_stats(stats, "Shell Sort", size);
-
-    if (print_size) {
-      for (int i = 0; i < print_size; i++) {
-        if (i > 0 && i % 5 == 0) {
-          printf("\n");
-        }
-        printf("%13d", arr_copy[i]);
-      }
-      printf("\n");
-    }
-    reset(stats);
-  }
-
-  if (set_member(sorts, 6)) {
-    memcpy(arr_copy, arr, size * sizeof(int));
-    quick_sort(stats, arr_copy, size);
-    print_stats(stats, "Quick Sort", size);
-
-    if (print_size) {
-      for (int i = 0; i < print_size; i++) {
-        if (i > 0 && i % 5 == 0) {
-          printf("\n");
-        }
-        printf("%13d", arr_copy[i]);
-      }
-      printf("\n");
-    }
-    reset(stats);
-  }
-
-  if (set_member(sorts, 7)) {
-    memcpy(arr_copy, arr, size * sizeof(int));
-    batcher_sort(stats, arr_copy, size);
-    print_stats(stats, "Batcher Sort", size);
-
-    if (print_size) {
-      for (int i = 0; i < print_size; i++) {
-        if (i > 0 && i % 5 == 0) {
-          printf("\n");
-        }
-        printf("%13d", arr_copy[i]);
-      }
-      printf("\n");
       reset(stats);
     }
   }
 
   free(arr);
+  free(arr_copy);
   free(stats);
   return 0;
 }
