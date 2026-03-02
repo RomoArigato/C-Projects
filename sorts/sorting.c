@@ -38,9 +38,6 @@ int main(int argc, char *argv[]) {
   while ((opt = getopt(argc, argv, "Hahbsqin:p:r:")) != -1) {
     switch (opt) {
     case 'a':
-      //   for (int i = 3; i < 8; i++) {
-      //     sorts = set_insert(sorts, i);
-      //   }
       sorts = set_universal();
       break;
 
@@ -63,11 +60,11 @@ int main(int argc, char *argv[]) {
       sorts = set_insert(sorts, 3);
       break;
 
-    case 's':
+    case 'h':
       sorts = set_insert(sorts, 4);
       break;
 
-    case 'h':
+    case 's':
       sorts = set_insert(sorts, 5);
       break;
 
@@ -89,24 +86,15 @@ int main(int argc, char *argv[]) {
     }
   }
 
+  if (print_size > size) {
+    print_size = size;
+  }
+
   if ((opt == -1) && (sorts == set_empty())) {
     printf("Select at least one sort to perform.\n");
     printf(USAGE);
     return 1;
   }
-
-  //   if (!seed) {
-  //     seed = 13371453;
-  //   }
-
-  //   if (!size) {
-  //     size = 100;
-  //   }
-
-  //   printf("p: %d", print_size);
-  //   if (!print_size) {
-  //     print_size = 100;
-  //   }
 
   srandom(seed);
   int *arr = malloc(size * sizeof(int));
@@ -116,7 +104,7 @@ int main(int argc, char *argv[]) {
   }
 
   if (set_member(sorts, 3)) {
-    memcpy(arr_copy, arr, size);
+    memcpy(arr_copy, arr, size * sizeof(int));
     insertion_sort(stats, arr_copy, size);
     print_stats(stats, "Insertion Sort", size);
 
@@ -133,24 +121,7 @@ int main(int argc, char *argv[]) {
   }
 
   if (set_member(sorts, 4)) {
-    memcpy(arr_copy, arr, size);
-    shell_sort(stats, arr_copy, size);
-    print_stats(stats, "Shell Sort", size);
-
-    if (print_size) {
-      for (int i = 0; i < print_size; i++) {
-        if (i > 0 && i % 5 == 0) {
-          printf("\n");
-        }
-        printf("%13d", arr_copy[i]);
-      }
-      printf("\n");
-    }
-    reset(stats);
-  }
-
-  if (set_member(sorts, 5)) {
-    memcpy(arr_copy, arr, size);
+    memcpy(arr_copy, arr, size * sizeof(int));
     heap_sort(stats, arr_copy, size);
     print_stats(stats, "Heap Sort", size);
 
@@ -166,8 +137,25 @@ int main(int argc, char *argv[]) {
     reset(stats);
   }
 
+  if (set_member(sorts, 5)) {
+    memcpy(arr_copy, arr, size * sizeof(int));
+    shell_sort(stats, arr_copy, size);
+    print_stats(stats, "Shell Sort", size);
+
+    if (print_size) {
+      for (int i = 0; i < print_size; i++) {
+        if (i > 0 && i % 5 == 0) {
+          printf("\n");
+        }
+        printf("%13d", arr_copy[i]);
+      }
+      printf("\n");
+    }
+    reset(stats);
+  }
+
   if (set_member(sorts, 6)) {
-    memcpy(arr_copy, arr, size);
+    memcpy(arr_copy, arr, size * sizeof(int));
     quick_sort(stats, arr_copy, size);
     print_stats(stats, "Quick Sort", size);
 
@@ -184,7 +172,7 @@ int main(int argc, char *argv[]) {
   }
 
   if (set_member(sorts, 7)) {
-    memcpy(arr_copy, arr, size);
+    memcpy(arr_copy, arr, size * sizeof(int));
     batcher_sort(stats, arr_copy, size);
     print_stats(stats, "Batcher Sort", size);
 
