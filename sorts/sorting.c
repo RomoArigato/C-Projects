@@ -32,7 +32,7 @@ typedef void (*sort_fn)(Stats *stats, int *A, int n);
 sort_fn sorting_functions[5] = {insertion_sort, heap_sort, shell_sort,
                                 quick_sort, batcher_sort};
 
-enum { INSERTION = 3, HEAP, SHELL, QUICK, BATCHER };
+enum { INSERTION, HEAP, SHELL, QUICK, BATCHER };
 
 char *function_names[5] = {"Insertion Sort", "Heap Sort", "Shell Sort",
                            "Quick Sort", "Batcher Sort"};
@@ -49,42 +49,39 @@ int main(int argc, char *argv[]) {
   while ((opt = getopt(argc, argv, "Hahbsqin:p:r:")) != -1) {
     switch (opt) {
     case 'a':
-      sorts = set_universal();
+      sorts = set_union(sorts, 0x1F);
       break;
 
     case 'r':
-      sorts = set_insert(sorts, 0);
       seed = strtol(optarg, NULL, 10);
       break;
 
     case 'n':
-      sorts = set_insert(sorts, 1);
       size = strtol(optarg, NULL, 10);
       break;
 
     case 'p':
-      sorts = set_insert(sorts, 2);
       print_size = strtol(optarg, NULL, 10);
       break;
 
     case 'i':
-      sorts = set_insert(sorts, 3);
+      sorts = set_insert(sorts, 0);
       break;
 
     case 'h':
-      sorts = set_insert(sorts, 4);
+      sorts = set_insert(sorts, 1);
       break;
 
     case 's':
-      sorts = set_insert(sorts, 5);
+      sorts = set_insert(sorts, 2);
       break;
 
     case 'q':
-      sorts = set_insert(sorts, 6);
+      sorts = set_insert(sorts, 3);
       break;
 
     case 'b':
-      sorts = set_insert(sorts, 7);
+      sorts = set_insert(sorts, 4);
       break;
 
     case 'H':
@@ -92,7 +89,7 @@ int main(int argc, char *argv[]) {
       return 0;
 
     case '?':
-      printf(USAGE);
+      fprintf(stderr, USAGE);
       return 1;
     }
   }
@@ -102,8 +99,8 @@ int main(int argc, char *argv[]) {
   }
 
   if ((opt == -1) && (sorts == set_empty())) {
-    printf("Select at least one sort to perform.\n");
-    printf(USAGE);
+    fprintf(stderr, "Select at least one sort to perform.\n");
+    fprintf(stderr, USAGE);
     return 1;
   }
 
@@ -116,9 +113,8 @@ int main(int argc, char *argv[]) {
 
   for (int i = INSERTION; i <= BATCHER; i++) {
     if (set_member(sorts, i)) {
-      // i starts at 3
-      sort_fn sort = sorting_functions[i - 3];
-      char *name = function_names[i - 3];
+      sort_fn sort = sorting_functions[i];
+      char *name = function_names[i];
       memcpy(arr_copy, arr, size * sizeof(int));
       sort(stats, arr_copy, size);
       print_stats(stats, name, size);
